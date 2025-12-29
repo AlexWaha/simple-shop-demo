@@ -1,0 +1,3 @@
+upstream app-upstream {
+    server ${NGINX_UPSTREAM};
+}

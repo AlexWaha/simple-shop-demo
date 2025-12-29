@@ -1,0 +1,48 @@
+# Laravel defaults
+/vendor
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/.phpunit.cache
+/.phpunit.result.cache
+_ide_helper.php
+.php-cs-fixer.cache
+/src/bootstrap/cache/*
+
+# Compiled assets (Vite / Laravel Mix)
+/public/build
+/public/css
+/public/js
+
+# Environment files
+.env
+.env.testing
+.env.backup
+.env.production
+.DS_Store
+
+# IDE/editor settings
+/.idea
+/.vscode
+/.fleet
+/.osp
+
+# macOS system files
+.DS_Store
+
+# Logs and debug files
+npm-debug.log
+yarn-error.log
+
+# AI
+CLAUDE.md
+.cursor
+.windsurf
+.zed
+memory-bank
+/.mcp.json
+
+# Docker service folders
+data
+logs

@@ -1,0 +1,103 @@
+services:
+  mysql:
+    container_name: local_mysql
+    build:
+      context: ./image/mysql/
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_DATABASE: db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      backend:
+        ipv4_address: 10.200.0.2
+    ports: ['3306:3306']
+    restart: on-failure
+    tty: true
+    volumes:
+      - ./data/mysql:/var/lib/mysql:rw
+      - ./logs/mysql:/var/log/mysql:rw
+      - ./data/dump:/var/dump:rw
+
+  nginx:
+    container_name: local_nginx
+    build:
+      context: ./image/nginx/
+      dockerfile: Dockerfile
+    networks:
+      backend:
+        ipv4_address: 10.200.0.3
+    ports: ['8080:80', '443:443']
+    restart: on-failure
+    tty: true
+    environment:
+      NGINX_UPSTREAM: php:9000
+      NGINX_ALLOWS_CORS: true
+    entrypoint: ["/usr/local/bin/nginx-entrypoint.sh"]
+    depends_on:
+      - php
+    volumes:
+      - ./logs/nginx:/var/log/nginx:rw
+      - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./conf/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./app:/var/www/html:rw
+
+  php:
+    container_name: local_php
+    build:
+      context: ./image/php/
+      dockerfile: Dockerfile
+    entrypoint: ["/usr/local/bin/php-entrypoint.sh"]
+    networks:
+      backend:
+        ipv4_address: 10.200.0.4
+    ports: ['9000:9000', '9001:9001']
+    restart: on-failure
+    volumes:
+      - ./app:/var/www/html:rw
+      - ./conf/php/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./conf/php/pcov.ini:/usr/local/etc/php/conf.d/pcov.ini
+      - ./conf/php/memory.ini:/usr/local/etc/php/conf.d/memory.ini
+
+  redis:
+    container_name: local_redis
+    build:
+      context: ./image/redis/
+      dockerfile: Dockerfile
+    tty: true
+    networks:
+      backend:
+        ipv4_address: 10.200.0.5
+    ports: ['6379:6379']
+    volumes:
+      - ./logs/redis:/var/log:rw
+      - ./data/redis:/data:rw
+    sysctls:
+      - net.core.somaxconn=2048
+    restart: on-failure
+
+  node:
+    container_name: local_node
+    build:
+      context: ./image/node/
+      dockerfile: Dockerfile
+    tty: true
+    command: sh -c "npm install && npm run build"
+    volumes:
+      - ./app:/var/www/html:rw
+    networks:
+      backend:
+        ipv4_address: 10.200.0.6
+
+networks:
+  backend:
+    ipam:
+      config:
+        - subnet: 10.200.0.0/24
+          ## IPS 10.200.1.0/1 is a default, restricted to use
+  # frontend:
+  #   ipam:
+  #     config:
+  #       - subnet: 10.200.0.0/24
+          ## IPS 10.200.0.0/1 is a default, restricted to use
