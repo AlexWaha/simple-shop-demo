@@ -5,6 +5,14 @@ if [ ! -d "/var/www/html/vendor" ]; then
     composer install --no-interaction --prefer-dist --optimize-autoloader
 fi
 
+# Generate Wayfinder routes for frontend
+php artisan wayfinder:generate --with-form 2>/dev/null || true
+
+# Build frontend assets
+if [ -f "/var/www/html/package.json" ]; then
+    npm install && npm run build
+fi
+
 groupadd -g 1000 laravel
 useradd laravel -g laravel -s /bin/sh
 

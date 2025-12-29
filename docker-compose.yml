@@ -77,18 +77,18 @@ services:
       - net.core.somaxconn=2048
     restart: on-failure
 
-  node:
-    container_name: local_node
-    build:
-      context: ./image/node/
-      dockerfile: Dockerfile
-    tty: true
-    command: sh -c "npm install && npm run build"
-    volumes:
-      - ./app:/var/www/html:rw
-    networks:
-      backend:
-        ipv4_address: 10.200.0.6
+#  node:
+#    container_name: local_node
+#    build:
+#      context: ./image/node/
+#      dockerfile: Dockerfile
+#    tty: true
+#    command: sh -c "npm install && npm run build"
+#    volumes:
+#      - ./app:/var/www/html:rw
+#    networks:
+#      backend:
+#        ipv4_address: 10.200.0.6
 
 networks:
   backend:

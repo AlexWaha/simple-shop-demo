@@ -59,6 +59,14 @@ RUN apt-get update && apt-get upgrade -y && \
 # Set permissions for Composer
 RUN mkdir -p /.composer/ && chmod -R 777 /.composer/
 
+# Install Node.js for frontend build (wayfinder requires PHP during build)
+RUN curl -fsSL https://deb.nodesource.com/setup_25.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
+# Add Composer global bin to PATH
+ENV PATH="$PATH:/root/.composer/vendor/bin"
+
 # Expose PHP-FPM port
 EXPOSE 9000
 
