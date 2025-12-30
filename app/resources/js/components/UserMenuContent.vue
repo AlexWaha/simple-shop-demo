@@ -9,18 +9,22 @@ import {
 import { logout } from '@/routes';
 import { edit } from '@/routes/profile';
 import type { User } from '@/types';
-import { Link, router } from '@inertiajs/vue3';
-import { LogOut, Settings } from 'lucide-vue-next';
+import { Link, router, usePage } from '@inertiajs/vue3';
+import { ClipboardList, LayoutGrid, LogOut, User as UserIcon } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 interface Props {
     user: User;
 }
 
+defineProps<Props>();
+
+const page = usePage();
+const isAdmin = computed(() => page.props.auth?.user?.is_admin ?? false);
+
 const handleLogout = () => {
     router.flushAll();
 };
-
-defineProps<Props>();
 </script>
 
 <template>
@@ -31,10 +35,22 @@ defineProps<Props>();
     </DropdownMenuLabel>
     <DropdownMenuSeparator />
     <DropdownMenuGroup>
+        <DropdownMenuItem v-if="isAdmin" :as-child="true">
+            <Link class="block w-full" href="/dashboard" prefetch as="button">
+                <LayoutGrid class="mr-2 h-4 w-4" />
+                Dashboard
+            </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem :as-child="true">
+            <Link class="block w-full" href="/orders" prefetch as="button">
+                <ClipboardList class="mr-2 h-4 w-4" />
+                Orders
+            </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem :as-child="true">
             <Link class="block w-full" :href="edit()" prefetch as="button">
-                <Settings class="mr-2 h-4 w-4" />
-                Settings
+                <UserIcon class="mr-2 h-4 w-4" />
+                Profile
             </Link>
         </DropdownMenuItem>
     </DropdownMenuGroup>

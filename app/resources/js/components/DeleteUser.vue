@@ -32,9 +32,9 @@ const passwordInput = useTemplateRef('passwordInput');
         <div
             class="space-y-4 rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10"
         >
-            <div class="relative space-y-0.5 text-red-600 dark:text-red-100">
+            <div class="relative space-y-0.5 text-red-700 dark:text-red-400">
                 <p class="font-medium">Warning</p>
-                <p class="text-sm">
+                <p class="text-sm text-red-600 dark:text-red-300">
                     Please proceed with caution, this cannot be undone.
                 </p>
             </div>

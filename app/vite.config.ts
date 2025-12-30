@@ -4,6 +4,8 @@ import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
 import { defineConfig } from 'vite';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 export default defineConfig({
     plugins: [
         laravel({
@@ -12,7 +14,7 @@ export default defineConfig({
             refresh: true,
         }),
         tailwindcss(),
-        wayfinder({
+        !isProduction && wayfinder({
             formVariants: true,
         }),
         vue({
@@ -23,5 +25,5 @@ export default defineConfig({
                 },
             },
         }),
-    ],
+    ].filter(Boolean),
 });

@@ -11,19 +11,53 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { Link, usePage } from '@inertiajs/vue3';
+import { BookOpen, Folder, LayoutGrid, Package, ShoppingCart, ClipboardList, BarChart3 } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
+import { computed } from 'vue';
 
-const mainNavItems: NavItem[] = [
+const page = usePage();
+const isAdmin = computed(() => page.props.auth?.user?.is_admin ?? false);
+
+const customerNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
+        title: 'Products',
+        href: '/',
+        icon: Package,
+    },
+    {
+        title: 'Cart',
+        href: '/cart',
+        icon: ShoppingCart,
+    },
+    {
+        title: 'Orders',
+        href: '/orders',
+        icon: ClipboardList,
     },
 ];
+
+const adminNavItems: NavItem[] = [
+    {
+        title: 'Dashboard',
+        href: '/dashboard',
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Products',
+        href: '/dashboard/products',
+        icon: Package,
+    },
+    {
+        title: 'Orders',
+        href: '/dashboard/orders',
+        icon: ClipboardList,
+    },
+];
+
+const mainNavItems = computed(() => isAdmin.value ? adminNavItems : customerNavItems);
+const homeHref = computed(() => isAdmin.value ? '/dashboard' : '/');
 
 const footerNavItems: NavItem[] = [
     {
@@ -45,7 +79,7 @@ const footerNavItems: NavItem[] = [
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="dashboard()">
+                        <Link :href="homeHref">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>

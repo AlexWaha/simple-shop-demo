@@ -77,6 +77,33 @@ services:
       - net.core.somaxconn=2048
     restart: on-failure
 
+  worker:
+    container_name: local_worker
+    build:
+      context: ./image/worker/
+      dockerfile: Dockerfile
+    networks:
+      backend:
+        ipv4_address: 10.200.0.6
+    restart: on-failure
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - ./app:/var/www/html:rw
+      - ./logs/worker:/var/log/supervisor:rw
+
+  mailpit:
+    container_name: local_mailpit
+    image: axllent/mailpit:latest
+    networks:
+      backend:
+        ipv4_address: 10.200.0.7
+    ports:
+      - '8025:8025'
+      - '1025:1025'
+    restart: on-failure
+
 #  node:
 #    container_name: local_node
 #    build:
@@ -88,7 +115,7 @@ services:
 #      - ./app:/var/www/html:rw
 #    networks:
 #      backend:
-#        ipv4_address: 10.200.0.6
+#        ipv4_address: 10.200.0.8
 
 networks:
   backend:
