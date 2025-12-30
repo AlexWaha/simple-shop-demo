@@ -4,7 +4,13 @@ Welcome! This is a simple e-commerce demo application for a toy store, built wit
 
 ## Getting Started
 
-Starting the project is straightforward. Just run:
+1. Copy the environment file:
+
+```bash
+cp app/.env.example app/.env
+```
+
+2. Start the containers:
 
 ```bash
 docker compose up -d
@@ -12,9 +18,10 @@ docker compose up -d
 
 The containers will automatically install all dependencies (Composer and npm) on first launch. Give it a minute or two.
 
-Once everything is up, run the database migrations to set up tables and seed demo data:
+3. Generate application key and run migrations:
 
 ```bash
+docker compose exec php php artisan key:generate
 docker compose exec php php artisan migrate --seed
 ```
 
