@@ -36,6 +36,7 @@ npm-debug.log
 yarn-error.log
 
 # AI
+.claude
 CLAUDE.md
 .cursor
 .windsurf
